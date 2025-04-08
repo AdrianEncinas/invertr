@@ -37,7 +37,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/register").permitAll()
                 .requestMatchers("/api/users/username/**").permitAll()
                 .requestMatchers("/api/users/email/**").permitAll()
-
+                .requestMatchers("/api/assets/**").permitAll()  
+                .requestMatchers("/api/price/test").permitAll()
+                .requestMatchers("/api/price/value/**").permitAll()
+                .requestMatchers("/api/price/graphic/**").permitAll()
+                
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
