@@ -19,3 +19,4 @@ Invertrack es una aplicación backend desarrollada en Spring Boot que permite a 
 - PostgreSQL
 - JPA/Hibernate
 - Maven
+ 
