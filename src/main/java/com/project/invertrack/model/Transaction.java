@@ -1,13 +1,17 @@
 package com.project.invertrack.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(name = "transactions")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +25,7 @@ public class Transaction {
     @JoinColumn(name = "asset_id", nullable = false)
     private InvestmentAsset asset;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
@@ -36,7 +40,9 @@ public class Transaction {
 
     @PrePersist
     protected void onCreate() {
-        date = LocalDateTime.now();
+        if (date == null) {
+            date = LocalDateTime.now();
+        }
     }
 }
 

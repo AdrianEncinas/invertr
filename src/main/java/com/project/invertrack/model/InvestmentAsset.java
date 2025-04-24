@@ -1,22 +1,26 @@
 package com.project.invertrack.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
 @Entity
 @Table(name = "investment_assets")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class InvestmentAsset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true)
     private String symbol;
 
-    @Column(nullable = false, length = 50)
-    private String type;
+    @Column(nullable = false)
+    private String type; // crypto, stock, fund
 } 

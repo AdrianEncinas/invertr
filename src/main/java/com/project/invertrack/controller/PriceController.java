@@ -56,13 +56,9 @@ public class PriceController {
             }
             
             JsonNode values = root.path("values").get(0);
+            System.out.println(values.get("close"));
             Map<String, Object> responseMap = Map.of(
-                "symbol", symbol,
-                "price", new BigDecimal(values.path("close").asText()),
-                "open", new BigDecimal(values.path("open").asText()),
-                "high", new BigDecimal(values.path("high").asText()),
-                "low", new BigDecimal(values.path("low").asText()),
-                "volume", new BigDecimal(values.path("volume").asText())
+                "price", new BigDecimal(values.path("close").asText())
             );
             
             return ResponseEntity.ok(responseMap);

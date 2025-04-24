@@ -1,13 +1,17 @@
 package com.project.invertrack.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(name = "user_portfolios")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserPortfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
