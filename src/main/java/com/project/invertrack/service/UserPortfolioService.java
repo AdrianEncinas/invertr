@@ -33,25 +33,33 @@ public class UserPortfolioService {
     }
 
     public List<Map<String, Object>> findByUserId(Long userId) {
-        log.info("Buscando portfolios para el usuario: {}", userId);
+        log.info("Buscando stocks para el usuario: {}", userId);
         List<UserPortfolio> portfolios = portfolioRepository.findByUserId(userId);
-        log.info("Número de portfolios encontrados: {}", portfolios.size());
-        
+        log.info("Número de stocks encontrados: {}", portfolios.size());
+    
+        List<String> symbols = portfolios.stream()
+            .map(p -> p.getAsset().getSymbol())
+            .distinct()
+            .collect(Collectors.toList());
+    
+        Map<String, Object> prices = priceService.getAssetInfo(symbols);
+    
         return portfolios.stream()
-                .map(portfolio -> {
-                    log.info("Procesando portfolio: {}", portfolio.getId());
-                    Map<String, Object> assetInfo = priceService.getAssetInfo(portfolio.getAsset().getSymbol());
-                    Map<String, Object> portfolioInfo = Map.of(
-                        "id", portfolio.getId(),
-                        "symbol", portfolio.getAsset().getSymbol(),
-                        "name", portfolio.getAsset().getName(),
-                        "quantity", portfolio.getQuantity(),
-                        "avgBuyPrice", portfolio.getAvgBuyPrice(),
-                        "currentPrice", assetInfo.get("currentPrice")
-                    );
-                    return portfolioInfo;
-                })
-                .collect(Collectors.toList());
+            .map(portfolio -> {
+                String symbol = portfolio.getAsset().getSymbol();
+                Double currentPrice = (Double) prices.get(symbol);
+    
+                Map<String, Object> portfolioInfo = Map.of(
+                    "id", portfolio.getId(),
+                    "symbol", symbol,
+                    "name", portfolio.getAsset().getName(),
+                    "quantity", portfolio.getQuantity(),
+                    "avgBuyPrice", portfolio.getAvgBuyPrice(),
+                    "currentPrice", currentPrice
+                );
+                return portfolioInfo;
+            })
+            .collect(Collectors.toList());
     }
 
     public Optional<UserPortfolio> findById(Long id) {
@@ -83,25 +91,5 @@ public class UserPortfolioService {
             portfolio.setAvgBuyPrice(dto.getAvgBuyPrice());
             return portfolioRepository.save(portfolio);
         }
-    }
-
-    public List<Map<String, Object>> getPortfolioWithPrices(Long userId) {
-        List<UserPortfolio> portfolios = portfolioRepository.findByUserId(userId);
-        return portfolios.stream()
-                .map(portfolio -> {
-                    Map<String, Object> assetInfo = priceService.getAssetInfo(portfolio.getAsset().getSymbol());
-                    Map<String, Object> portfolioInfo = Map.of(
-                        "id", portfolio.getId(),
-                        "symbol", portfolio.getAsset().getSymbol(),
-                        "name", portfolio.getAsset().getName(),
-                        "quantity", portfolio.getQuantity(),
-                        "avgBuyPrice", portfolio.getAvgBuyPrice(),
-                        "currentPrice", assetInfo.get("currentPrice"),
-                        "change", assetInfo.get("change"),
-                        "changePercent", assetInfo.get("changePercent")
-                    );
-                    return portfolioInfo;
-                })
-                .collect(Collectors.toList());
     }
 } 

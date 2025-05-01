@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -15,9 +16,10 @@ public class PriceService {
     @Value("${twelvedata.api.key}")
     private String apiKey;
 
-    public Map<String, Object> getAssetInfo(String symbol) {
+    public Map<String, Object> getAssetInfo(List<String> symbols) {
         try {
-            String url = "https://api.twelvedata.com/price?symbol=" + symbol + "&apikey=" + apiKey;
+            String url = "https://api.twelvedata.com/price?symbol=" + String.join(",", symbols) + "&apikey=" + apiKey;
+            System.out.println(url);
             RestTemplate restTemplate = new RestTemplate();
             String response = restTemplate.getForObject(url, String.class);
             
@@ -29,7 +31,9 @@ public class PriceService {
             }
             
             Map<String, Object> responseMap = new HashMap<>();
-            responseMap.put("currentPrice", root.path("price").asDouble());
+            for (String symbol : symbols) {
+                responseMap.put(symbol, root.path(symbol).path("price").asDouble());
+            }
             
             return responseMap;
         } catch (Exception e) {

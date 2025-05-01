@@ -48,6 +48,7 @@ const PortfolioPage: React.FC = () => {
         }
         const data = await response.json();
         // Añadir datos históricos simulados a cada activo
+        
         const assetsWithHistory = data.map((asset: Asset) => ({
           ...asset,
           historicalData: mockHistoricalData(asset.currentPrice)

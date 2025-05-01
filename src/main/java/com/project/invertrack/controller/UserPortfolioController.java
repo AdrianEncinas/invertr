@@ -52,14 +52,6 @@ public class UserPortfolioController {
         }
     }
 
-    @GetMapping("/user/{userId}/with-prices")
-    public ResponseEntity<?> getPortfolioWithPrices(@PathVariable Long userId) {
-        try {
-            return ResponseEntity.ok(portfolioService.getPortfolioWithPrices(userId));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error al obtener el portfolio con precios: " + e.getMessage());
-        }
-    }
 
     private PortfolioDTO convertToDTO(UserPortfolio portfolio) {
         PortfolioDTO dto = new PortfolioDTO();
